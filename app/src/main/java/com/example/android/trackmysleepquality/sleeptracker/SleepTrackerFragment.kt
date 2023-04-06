@@ -43,11 +43,17 @@ class SleepTrackerFragment : Fragment() {
      * This function uses DataBindingUtil to inflate R.layout.fragment_sleep_quality.
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
+
+
+
 
         // Get a reference to the binding object and inflate the fragment views.
         val binding: FragmentSleepTrackerBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_sleep_tracker, container, false)
+
+
+
 
         val application = requireNotNull(this.activity).application
 
@@ -62,6 +68,16 @@ class SleepTrackerFragment : Fragment() {
         binding.sleepTrackerViewModel = sleepTrackerViewModel
 
         binding.lifecycleOwner = this
+
+        //Adding binding to adapter
+        val adapter = SleepNightAdapter()
+        binding.sleepList.adapter = adapter
+
+        sleepTrackerViewModel.nights.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.data = it
+            }
+        })
 
         // Add an Observer on the state variable for showing a Snackbar message
         // when the CLEAR button is pressed.
